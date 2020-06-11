@@ -18,6 +18,6 @@ func main() {
 	if err != nil {
 		log.Print(err)
 	}
-	log.Println(res[0].Authors)
+	NewIndex(res)
 
 }
