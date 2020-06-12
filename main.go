@@ -14,10 +14,11 @@ func main() {
 
 	flag.Parse()
 	log.Println(*dataset)
-	res, err := ReadDataset(*dataset)
+	articles, err := ReadDataset(*dataset)
 	if err != nil {
 		log.Print(err)
 	}
-	// NewIndex(res)
+	NewArticleIndex(articles)
+	
 
 }
