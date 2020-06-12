@@ -10,6 +10,7 @@ import (
 
 // Article represents a story object from the HuffPost news category dataset.
 type Article struct {
+	ID               int
 	Category         string `json:"category"`
 	Headline         string `json:"headline"`
 	Authors          string `json:"authors"`
@@ -29,9 +30,11 @@ func ReadDataset(name string) ([]Article, error) {
 
 	var articles []Article
 	scanner := bufio.NewScanner(data)
-
+	id := 0
 	for scanner.Scan() {
 		var tempArticle Article
+		tempArticle.ID = id
+		id++
 		err := json.Unmarshal(scanner.Bytes(), &tempArticle)
 		if err != nil {
 			return nil, err

@@ -18,6 +18,6 @@ func main() {
 	if err != nil {
 		log.Print(err)
 	}
-	NewIndex(res)
+	// NewIndex(res)
 
 }
