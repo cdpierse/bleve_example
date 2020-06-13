@@ -51,42 +51,55 @@ func ReadDataset(name string) ([]Article, error) {
 // or some other datastore.
 type Articles []Article
 
+// NewArticleIndex buils a new bleve index from the
+// `Articles` passed.
+// TODO: #2 #1 Add a name parameter
 func NewArticleIndex(a Articles) {
-	// mapping := bleve.NewIndexMapping()
-	// index, err := bleve.New("example.bleve", mapping)
-	index, err := bleve.Open("example.bleve")
-	log.Println("Loaded index")
+	mapping := bleve.NewIndexMapping()
+	index, err := bleve.New("example1.bleve", mapping)
+	log.Println("Creating index")
 	if err != nil {
 		panic(err)
 	}
 
-	// for i, article := range a[:5000] {
-	// 	index.Index(article.ID, article)
-	// 	if i%1000 == 0 {
-	// 		log.Printf("Indexed %v articles", i)
-	// 	}
+	for i, article := range a {
+		index.Index(article.ID, article)
+		if i%1000 == 0 {
+			log.Printf("Indexed %v articles", i)
+		}
 
-	// }
+	}
+}
 
-
-	query := bleve.NewMatchQuery("Actors on strike syria due to war")
+// MatchQueryIndex ...
+func MatchQueryIndex(qs string, index bleve.Index) (*bleve.SearchResult, error) {
+	query := bleve.NewMatchQuery(qs)
 	searchRequest := bleve.NewSearchRequest(query)
-	searchResult, _ := index.Search(searchRequest)
-	log.Println(searchResult)
+	searchResult, err := index.Search(searchRequest)
+	log.Printf("Search took %v seconds ", searchResult.Took)
 
-	for _, article := range a {
-		for j := range searchResult.Hits {
-			if article.ID == searchResult.Hits[j].ID {
-				log.Println(article)
+	return searchResult, err
+}
+
+// GetQueryHits ...
+func GetQueryHits(res *bleve.SearchResult, a Articles) {
+	hits := res.Hits
+	for i := range hits {
+		for j := range a {
+			if hits[i].ID == a[j].ID {
+				log.Printf("\nHeadline: %s\nAuthors: %s\nShort Description: %s\nDate: %s\n\n",
+					a[j].Headline,
+					a[j].Authors,
+					a[j].ShortDescription,
+					a[j].Date)
 			}
+
 		}
 	}
 
 }
 
-// func QueryIndex(qs string, index *bleve.Index) bleve.SearchResult {
-// 	query := bleve.NewQueryStringQuery(qs)
-// 	searchRequest := bleve.NewSearchRequest(query)
-// 	searchRequest.Highlight
-// 	return
-// }
+//GetIndex returns a belve index of `name`
+func GetIndex(name string) (bleve.Index, error) {
+	return bleve.Open(name)
+}

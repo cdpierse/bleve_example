@@ -18,7 +18,15 @@ func main() {
 	if err != nil {
 		log.Print(err)
 	}
-	NewArticleIndex(articles)
-	
+
+	index, err := GetIndex("example1.bleve")
+	if err != nil {
+		log.Print(err)
+	}
+	log.Println("Loaded Index")
+
+	matches, err := MatchQueryIndex("California fires rage on",index)
+	GetQueryHits(matches,articles)
+
 
 }
