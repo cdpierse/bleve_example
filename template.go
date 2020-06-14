@@ -1,8 +1,8 @@
 package main
 
 import (
-	"html/template"
-	"log"
+	_"html/template"
+	_"log"
 )
 
 // func GetTemplate(){

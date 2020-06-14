@@ -33,6 +33,6 @@ func main() {
 	// `
 	// matches, err := MatchQueryIndex(longstring, index)
 	// GetQueryHits(matches, articles)
-	GetTemplate()
+	// GetTemplate()
 
 }
