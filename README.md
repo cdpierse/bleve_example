@@ -1,3 +1,5 @@
+[![cdpierse](https://circleci.com/gh/cdpierse/bleve_example.svg?style=svg)](https://app.circleci.com/pipelines/github/cdpierse/bleve_example)
+
 # Bleve Indexing Example
 
 ---
