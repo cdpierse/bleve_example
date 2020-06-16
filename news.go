@@ -54,7 +54,6 @@ type Articles []Article
 
 // NewArticleIndex buils a new bleve index from the
 // `Articles` passed.
-// TODO: #2 #1 Add a name parameter
 func NewArticleIndex(a Articles) {
 	mapping := bleve.NewIndexMapping()
 	index, err := bleve.New("example1.bleve", mapping)
@@ -96,8 +95,12 @@ func TermQuery(t string, index bleve.Index) (*bleve.SearchResult, error) {
 }
 
 func PhraseQuery(terms []string, field string, index bleve.Index) (*bleve.SearchResult, error) {
-	// TODO: #5 Add loop to change terms to lowercase 
-	query := bleve.NewPhraseQuery(terms, field)
+	// TODO: #5 Add loop to change terms to lowercase
+	var lowerCaseTerms []string
+	for _, term := range terms {
+		lowerCaseTerms = append(lowerCaseTerms, strings.ToLower(term))
+	}
+	query := bleve.NewPhraseQuery(lowerCaseTerms, field)
 	searchRequest := bleve.NewSearchRequest(query)
 	searchResult, err := index.Search(searchRequest)
 	log.Printf("Search took %v seconds ", searchResult.Took)
