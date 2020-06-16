@@ -11,6 +11,7 @@ import (
 	"github.com/blevesearch/bleve"
 )
 
+// TODO #7 : @cdpierse convert Date field to Date type.
 // Article represents a story object from the HuffPost news category dataset.
 type Article struct {
 	ID               string
@@ -54,12 +55,15 @@ type Articles []Article
 
 // NewArticleIndex buils a new bleve index from the
 // `Articles` passed.
-func NewArticleIndex(a Articles) {
+func NewArticleIndex(a Articles, name string) error{
 	mapping := bleve.NewIndexMapping()
-	index, err := bleve.New("example1.bleve", mapping)
+	if name == "" {
+		name = "example1.bleve"
+	}
+	index, err := bleve.New(name, mapping)
 	log.Println("Creating index")
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	for i, article := range a {
@@ -69,6 +73,7 @@ func NewArticleIndex(a Articles) {
 		}
 
 	}
+	return nil
 }
 
 // MatchQuery creates a new bleve MatchQuery from query string `qs`
@@ -94,8 +99,10 @@ func TermQuery(t string, index bleve.Index) (*bleve.SearchResult, error) {
 	return searchResult, err
 }
 
+// PhraseQuery creates a new bleve PhraseQuery from a slice of term strings. The
+// terms are converted to lowercase to match how they were indexed.
+// Returns a pointer to the bleve.SearchResult
 func PhraseQuery(terms []string, field string, index bleve.Index) (*bleve.SearchResult, error) {
-	// TODO: #5 Add loop to change terms to lowercase
 	var lowerCaseTerms []string
 	for _, term := range terms {
 		lowerCaseTerms = append(lowerCaseTerms, strings.ToLower(term))
@@ -108,6 +115,7 @@ func PhraseQuery(terms []string, field string, index bleve.Index) (*bleve.Search
 	return searchResult, err
 }
 
+// PhraseMatchQuery ...
 func PhraseMatchQuery(termPhrase string, index bleve.Index) (*bleve.SearchResult, error) {
 	query := bleve.NewMatchPhraseQuery(termPhrase)
 	searchRequest := bleve.NewSearchRequest(query)

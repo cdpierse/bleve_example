@@ -28,7 +28,7 @@ func main() {
 
 	if !dirExists("example1.bleve") {
 		log.Println("Index does not exist, creating from file:", *dataset)
-		NewArticleIndex(articles)
+		NewArticleIndex(articles,"")
 	}
 
 	index, err := GetIndex("example1.bleve")
