@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/blevesearch/bleve"
 )
@@ -71,9 +72,41 @@ func NewArticleIndex(a Articles) {
 	}
 }
 
-// MatchQueryIndex ...
-func MatchQueryIndex(qs string, index bleve.Index) (*bleve.SearchResult, error) {
+// MatchQuery creates a new bleve MatchQuery from query string `qs`
+// and returns a pointer to the search result.
+func MatchQuery(qs string, index bleve.Index) (*bleve.SearchResult, error) {
 	query := bleve.NewMatchQuery(qs)
+	searchRequest := bleve.NewSearchRequest(query)
+	searchResult, err := index.Search(searchRequest)
+	log.Printf("Search took %v seconds ", searchResult.Took)
+
+	return searchResult, err
+}
+
+// TermQuery creates a new bleve TermQuery from query from the term
+// `t` and returns a pointer to the search result.
+func TermQuery(t string, index bleve.Index) (*bleve.SearchResult, error) {
+	t = strings.ToLower(t)
+	query := bleve.NewTermQuery(t)
+	searchRequest := bleve.NewSearchRequest(query)
+	searchResult, err := index.Search(searchRequest)
+	log.Printf("Search took %v seconds ", searchResult.Took)
+
+	return searchResult, err
+}
+
+func PhraseQuery(terms []string, field string, index bleve.Index) (*bleve.SearchResult, error) {
+	// TODO: #5 Add loop to change terms to lowercase 
+	query := bleve.NewPhraseQuery(terms, field)
+	searchRequest := bleve.NewSearchRequest(query)
+	searchResult, err := index.Search(searchRequest)
+	log.Printf("Search took %v seconds ", searchResult.Took)
+
+	return searchResult, err
+}
+
+func PhraseMatchQuery(termPhrase string, index bleve.Index) (*bleve.SearchResult, error) {
+	query := bleve.NewMatchPhraseQuery(termPhrase)
 	searchRequest := bleve.NewSearchRequest(query)
 	searchResult, err := index.Search(searchRequest)
 	log.Printf("Search took %v seconds ", searchResult.Took)
