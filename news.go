@@ -55,7 +55,7 @@ type Articles []Article
 
 // NewArticleIndex buils a new bleve index from the
 // `Articles` passed.
-func NewArticleIndex(a Articles, name string) error{
+func NewArticleIndex(a Articles, name string) error {
 	mapping := bleve.NewIndexMapping()
 	if name == "" {
 		name = "example1.bleve"
@@ -126,11 +126,13 @@ func PhraseMatchQuery(termPhrase string, index bleve.Index) (*bleve.SearchResult
 }
 
 // GetQueryHits ...
-func GetQueryHits(res *bleve.SearchResult, a Articles) {
+func GetQueryHits(res *bleve.SearchResult, a Articles) Articles {
+	var results Articles
 	hits := res.Hits
 	for i := range hits {
 		for j := range a {
 			if hits[i].ID == a[j].ID {
+				results = append(results, a[j])
 				log.Printf("\nHeadline: %s\nAuthors: %s\nShort Description: %s\nDate: %s\n\n",
 					a[j].Headline,
 					a[j].Authors,
@@ -140,6 +142,7 @@ func GetQueryHits(res *bleve.SearchResult, a Articles) {
 
 		}
 	}
+	return results
 
 }
 
