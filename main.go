@@ -48,8 +48,6 @@ func main() {
 
 	// testString := "conversatian"
 	// matches, err := MatchQuery(testString, index)
-	matches, err := TermQuery("Igor", index)
-	GetQueryHits(matches, articles)
 
 	tmpl := template.Must(template.ParseFiles("index.html"))
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -61,9 +59,17 @@ func main() {
 		type query struct {
 			queryString string
 		}
-		_ = query{queryString: r.FormValue("query")}
+		q := query{queryString: r.FormValue("query")}
+		matches, err := MatchQuery(q.queryString, index)
+		if err != nil {
+			log.Println("oops")
+		}
+		res := GetQueryHits(matches, articles)
 
-		tmpl.Execute(w, struct{ Success bool }{true})
+		tmpl.Execute(w, struct {
+			Success bool
+			Results Articles
+		}{true, res})
 	})
 	http.ListenAndServe(":80", nil)
 

@@ -7,8 +7,6 @@
 </head>
 
 <body>
-
-
     <section class="page">
         <h1>Enter Your Search Query</h1>
         <form method="POST">
@@ -17,7 +15,25 @@
         </form>
         <h1>Results</h1>
         {{if .Success}}
-        <h1>There are results</h1>
+        <table>
+            <tr>
+                <th>Headline</th>
+                <th>Link</th>
+                <th>Author</th>
+                <th>Short Description</th>
+                <th>Date Published</th>
+            </tr>
+
+            {{range .Results}}
+            <tr class="spaceUnder">
+                <td><b>{{.Headline}}</b></td>
+                <td><a href="{{.Link}}">{{.Link}}</a></td>
+                <td>{{.Authors}}</td>
+                <td>{{.ShortDescription}}</td>
+                <td>{{.Date}}</td>
+            </tr>
+            {{end}}
+        </table>
         {{else}}
         <h1>No Results</h1>
         {{end}}
@@ -39,14 +55,19 @@
 
         .page {
             width: 80%;
-            max-width: 500px;
+            max-width: 900px;
             margin: auto;
             margin-top: 40px;
             margin-bottom: 40px;
             padding: 80px;
-            background: #FFFCF6;
-            border: 1px solid #eee;
-            box-shadow: 0 10px 6px -6px #777;
+            border-radius: 50px;
+            background: #ffffff;
+            box-shadow: 20px 20px 60px #d9d9d9,
+                -20px -20px 60px #ffffff;
+        }
+
+        tr.spaceUnder>td {
+            padding-bottom: 1em;
         }
 
 
