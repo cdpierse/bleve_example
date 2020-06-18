@@ -2,7 +2,9 @@ package main
 
 import (
 	"flag"
+	"html/template"
 	"log"
+	"net/http"
 	"os"
 )
 
@@ -28,7 +30,7 @@ func main() {
 
 	if !dirExists("example1.bleve") {
 		log.Println("Index does not exist, creating from file:", *dataset)
-		NewArticleIndex(articles,"")
+		NewArticleIndex(articles, "")
 	}
 
 	index, err := GetIndex("example1.bleve")
@@ -46,8 +48,25 @@ func main() {
 
 	// testString := "conversatian"
 	// matches, err := MatchQuery(testString, index)
-	matches, err := TermQuery("Igor",index)
+	matches, err := TermQuery("Igor", index)
 	GetQueryHits(matches, articles)
+
+	tmpl := template.Must(template.ParseFiles("index.html"))
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			tmpl.Execute(w, nil)
+			return
+		}
+
+		type query struct {
+			queryString string
+		}
+		_ = query{queryString: r.FormValue("query")}
+
+		tmpl.Execute(w, struct{ Success bool }{true})
+	})
+	http.ListenAndServe(":80", nil)
+
 	// GetTemplate()
 
 }

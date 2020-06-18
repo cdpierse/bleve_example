@@ -1,11 +1,22 @@
 package main
 
-import (
-	_"html/template"
-	_"log"
-)
+// import (
+// 	"html/template"
+// 	_ "log"
+// 	"net/http"
+// )
 
-// func GetTemplate(){
-// 	t, err := template.ParseFiles("index.html")
-// 	log.Println(t.,err)
+// func GetTemplate() *template.Template {
+// 	tpl := template.Must(template.ParseFiles("index.html"))
+// 	return tpl
+
+// }
+
+// func ServeTemplate() *http.Handler {
+// 	tpl := GetTemplate()
+// 	return http.HandleFunc("/",
+// 		func(w http.ResponseWriter, r *http.Request) {
+// 			tpl.Execute(w, nil)
+
+// 		})
 // }

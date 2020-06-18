@@ -11,10 +11,16 @@
 
     <section class="page">
         <h1>Enter Your Search Query</h1>
-        <input></input>
-        <button>Search</button>
+        <form method="POST">
+            <input type="text" name="query">
+            <input type="submit">
+        </form>
         <h1>Results</h1>
-
+        {{if .Success}}
+        <h1>There are results</h1>
+        {{else}}
+        <h1>No Results</h1>
+        {{end}}
     </section>
     <style>
         body {
