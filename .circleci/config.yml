@@ -24,3 +24,10 @@ jobs:
       # specify any bash command here prefixed with `run: `
       - run: go get -v -t -d ./...
       - run: go test -v ./...
+      - run:
+          command: |
+                go test -coverprofile=c.out
+                go tool cover -html=c.out -o coverage.html
+                mv coverage.html /tmp/artifacts
+      - store_artifacts:
+          path: /tmp/artifacts

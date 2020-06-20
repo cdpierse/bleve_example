@@ -37,14 +37,16 @@ func TestNewArticleIndex(t *testing.T) {
 		t.Fatal("Could not create test index.")
 	}
 	log.Println("Got here")
-	teardown()
+	
 	// TODO: #8 @cdpierse fix failing conditions for dir check
-	// if !dirExists("testIndex.bleve") {
-	// 	t.Errorf("Did not create article index")
-	// }
+	ok := dirExists("testIndex.bleve")
+	if !ok {
+		t.Errorf("Did not create article index")
+	}
 	// _, err = GetIndex("testIndex.bleve")
 	// if err != nil {
 	// 	t.Errorf("Could not load the test index created")
 	// }
+	teardown()
 
 }

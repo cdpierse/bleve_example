@@ -81,6 +81,7 @@ func NewArticleIndex(a Articles, name string) error {
 func MatchQuery(qs string, index bleve.Index) (*bleve.SearchResult, error) {
 	query := bleve.NewMatchQuery(qs)
 	searchRequest := bleve.NewSearchRequest(query)
+	searchRequest.Size = 100
 	searchResult, err := index.Search(searchRequest)
 	log.Printf("Search took %v seconds ", searchResult.Took)
 
