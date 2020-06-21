@@ -47,7 +47,7 @@ func main() {
 
 	// testString := "conversatian"
 	// matches, err := MatchQuery(testString, index)
-	// TODO: #9 @cdpierse refactor templating 
+	// TODO: #9 @cdpierse refactor templating
 	tmpl := template.Must(template.ParseFiles("index.html"))
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
@@ -87,7 +87,6 @@ func fileExists(name string) bool {
 
 func dirExists(name string) bool {
 	info, err := os.Stat(name)
-	log.Println(info,err)
 	if os.IsNotExist(err) {
 		return false
 	}

@@ -61,6 +61,7 @@ func NewArticleIndex(a Articles, name string) error {
 		name = "example1.bleve"
 	}
 	index, err := bleve.New(name, mapping)
+	defer index.Close()
 	log.Println("Creating index")
 	if err != nil {
 		return err
@@ -151,7 +152,7 @@ func GetQueryHits(res *bleve.SearchResult, a Articles) Articles {
 func GetIndex(name string) (bleve.Index, error) {
 	index, err := bleve.Open(name)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	return index, nil
 

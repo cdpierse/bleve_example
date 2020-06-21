@@ -56,23 +56,24 @@ func TestNewArticleIndexExists(t *testing.T) {
 
 }
 
-// func TestMatchQuery(t *testing.T) {
-// 	// articles := setupArticles()
-// 	// err := NewArticleIndex(articles, TestIndexName)
-// 	// if err != nil {
-// 	// 	teardown()
-// 	// 	t.Fatal("Could not create test index.")
-// 	// }
-// 	// // index, err := bleve.Open(TestIndexName)
+// TODO: #11 @cdpierse Fix open testing index during tests issue, may be bug
+func TestMatchQuery(t *testing.T) {
+	// articles := setupArticles()
+	// err := NewArticleIndex(articles, TestIndexName)
+	// if err != nil {
+	// 	teardown()
+	// 	t.Fatal("Could not create test index.")
+	// }
+	// // index, err := bleve.Open(TestIndexName)
 
-// 	_, err := GetIndex(TestIndexName)
-// 	if err != nil {
-// 		t.Errorf("Could not get the test index")
-// 	}
-// 	// queryString := "Testing search results"
-// 	// _, err = MatchQuery(queryString, index)
-// 	// if err != nil {
-// 	// 	t.Fatal("Could not create query")
-// 	// }
+	_, err := GetIndex(TestIndexName)
+	if err != nil {
+		t.Errorf("Could not get the test index")
+	}
+	// queryString := "Testing search results"
+	// _, err = MatchQuery(queryString, index)
+	// if err != nil {
+	// 	t.Fatal("Could not create query")
+	// }
 
-// }
+}
