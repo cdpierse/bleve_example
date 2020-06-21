@@ -1,10 +1,13 @@
 package main
 
 import (
+	_ "github.com/blevesearch/bleve"
 	"log"
 	"os"
 	"testing"
 )
+
+const TestIndexName = "testIndex.bleve"
 
 func setupArticles() Articles {
 	articles, err := ReadDataset("News_Category_Dataset_v2.json")
@@ -16,10 +19,24 @@ func setupArticles() Articles {
 }
 
 func teardown() {
-	err := os.RemoveAll("testIndex.bleve/")
+	err := os.RemoveAll(TestIndexName + "/")
 	if err != nil {
 		log.Fatal("Could not remove test index directory")
 	}
+}
+
+func TestMain(m *testing.M) {
+	articles := setupArticles()
+	err := NewArticleIndex(articles, TestIndexName)
+	if err != nil {
+		log.Fatal("Could not create testing index")
+	}
+	log.Println("Do stuff BEFORE the tests!")
+	exitVal := m.Run()
+	log.Println("Do stuff AFTER the tests!")
+	teardown()
+	os.Exit(exitVal)
+
 }
 
 func TestReadDataset(t *testing.T) {
@@ -30,23 +47,32 @@ func TestReadDataset(t *testing.T) {
 	}
 }
 
-func TestNewArticleIndex(t *testing.T) {
-	articles := setupArticles()
-	err := NewArticleIndex(articles, "testIndex.bleve")
-	if err != nil {
-		t.Fatal("Could not create test index.")
-	}
-	log.Println("Got here")
-	
-	// TODO: #8 @cdpierse fix failing conditions for dir check
-	ok := dirExists("testIndex.bleve")
+func TestNewArticleIndexExists(t *testing.T) {
+	// We create the test article index in TestMain
+	ok := dirExists(TestIndexName)
 	if !ok {
-		t.Errorf("Did not create article index")
+		t.Fatal("Test Article Index Does Not Exist")
 	}
-	// _, err = GetIndex("testIndex.bleve")
-	// if err != nil {
-	// 	t.Errorf("Could not load the test index created")
-	// }
-	teardown()
 
 }
+
+// func TestMatchQuery(t *testing.T) {
+// 	// articles := setupArticles()
+// 	// err := NewArticleIndex(articles, TestIndexName)
+// 	// if err != nil {
+// 	// 	teardown()
+// 	// 	t.Fatal("Could not create test index.")
+// 	// }
+// 	// // index, err := bleve.Open(TestIndexName)
+
+// 	_, err := GetIndex(TestIndexName)
+// 	if err != nil {
+// 		t.Errorf("Could not get the test index")
+// 	}
+// 	// queryString := "Testing search results"
+// 	// _, err = MatchQuery(queryString, index)
+// 	// if err != nil {
+// 	// 	t.Fatal("Could not create query")
+// 	// }
+
+// }

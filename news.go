@@ -149,5 +149,10 @@ func GetQueryHits(res *bleve.SearchResult, a Articles) Articles {
 
 //GetIndex returns a belve index of `name`
 func GetIndex(name string) (bleve.Index, error) {
-	return bleve.Open(name)
+	index, err := bleve.Open(name)
+	if err != nil {
+		panic(err)
+	}
+	return index, nil
+
 }
