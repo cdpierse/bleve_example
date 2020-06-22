@@ -38,33 +38,10 @@ func main() {
 	}
 	log.Println("Loaded Index")
 
-	// TODO: #9 @cdpierse refactor templating
 	tmpl := template.Must(template.ParseFiles("index.html"))
-	handler := ServeTemplate(tmpl,articles,index)
-	// http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-	// 	if r.Method != http.MethodPost {
-	// 		tmpl.Execute(w, nil)
-	// 		return
-	// 	}
+	handler := ServeTemplate(tmpl, articles, index)
 
-	// 	type query struct {
-	// 		queryString string
-	// 	}
-	// 	q := query{queryString: r.FormValue("query")}
-	// 	matches, err := MatchQuery(q.queryString, index)
-	// 	if err != nil {
-	// 		log.Println("oops")
-	// 	}
-	// 	res := GetQueryHits(matches, articles)
-
-	// 	tmpl.Execute(w, struct {
-	// 		Success bool
-	// 		Results Articles
-	// 	}{true, res})
-	// })
 	http.ListenAndServe(":80", handler)
-
-	// GetTemplate()
 
 }
 
