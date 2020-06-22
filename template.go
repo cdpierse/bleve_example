@@ -8,30 +8,11 @@ import (
 	"github.com/blevesearch/bleve"
 )
 
-// import (
-// 	"html/template"
-// 	_ "log"
-// 	"net/http"
-// )
-
-// func GetTemplate() *template.Template {
-// 	tpl := template.Must(template.ParseFiles("index.html"))
-// 	return tpl
-
-// }
-
-// func ServeTemplate() *http.Handler {
-// 	tpl := GetTemplate()
-// 	return http.HandleFunc("/",
-// 		func(w http.ResponseWriter, r *http.Request) {
-// 			tpl.Execute(w, nil)
-
-// 		})
-// }
 type query struct {
 	queryString string
 }
-
+// ServeTemplate returns a handler function for handling
+// the executed tempalte and the search queries posted to it
 func ServeTemplate(tpl *template.Template, articles Articles, index bleve.Index) http.HandlerFunc {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {

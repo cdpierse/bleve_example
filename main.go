@@ -41,7 +41,7 @@ func main() {
 	tmpl := template.Must(template.ParseFiles("index.html"))
 	handler := ServeTemplate(tmpl, articles, index)
 
-	http.ListenAndServe(":80", handler)
+	http.ListenAndServe(":3000", handler)
 
 }
 
