@@ -12,6 +12,7 @@ import (
 )
 
 // TODO #7 : @cdpierse convert Date field to Date type.
+
 // Article represents a story object from the HuffPost news category dataset.
 type Article struct {
 	ID               string

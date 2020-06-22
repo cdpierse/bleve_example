@@ -56,7 +56,6 @@ func TestNewArticleIndexExists(t *testing.T) {
 
 }
 
-// TODO: #11 @cdpierse Fix open testing index during tests issue, may be bug
 func TestMatchQuery(t *testing.T) {
 	// articles := setupArticles()
 	// err := NewArticleIndex(articles, TestIndexName)

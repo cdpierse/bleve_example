@@ -38,39 +38,31 @@ func main() {
 	}
 	log.Println("Loaded Index")
 
-	// longstring := `
-	// A combination of dry weather and record heat in recent days has led to several wildfires in California, forcing some evacuations on Wednesday.
-	// Officials in Ventura County issued an evacuation order for a remote area of Piru located about 48 miles northwest of downtown Los Angeles for a blaze known as the Lime Fire.
-	// The blaze broke out Wednesday afternoon near the Lake Piru campground and has burned about 450 acres so far.
-	// Fire officials said Thursday that two minor injuries have been reported so far, and the fire is 20 percent contained.
-	// `
-
-	// testString := "conversatian"
-	// matches, err := MatchQuery(testString, index)
 	// TODO: #9 @cdpierse refactor templating
 	tmpl := template.Must(template.ParseFiles("index.html"))
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != http.MethodPost {
-			tmpl.Execute(w, nil)
-			return
-		}
+	handler := ServeTemplate(tmpl,articles,index)
+	// http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	// 	if r.Method != http.MethodPost {
+	// 		tmpl.Execute(w, nil)
+	// 		return
+	// 	}
 
-		type query struct {
-			queryString string
-		}
-		q := query{queryString: r.FormValue("query")}
-		matches, err := MatchQuery(q.queryString, index)
-		if err != nil {
-			log.Println("oops")
-		}
-		res := GetQueryHits(matches, articles)
+	// 	type query struct {
+	// 		queryString string
+	// 	}
+	// 	q := query{queryString: r.FormValue("query")}
+	// 	matches, err := MatchQuery(q.queryString, index)
+	// 	if err != nil {
+	// 		log.Println("oops")
+	// 	}
+	// 	res := GetQueryHits(matches, articles)
 
-		tmpl.Execute(w, struct {
-			Success bool
-			Results Articles
-		}{true, res})
-	})
-	http.ListenAndServe(":80", nil)
+	// 	tmpl.Execute(w, struct {
+	// 		Success bool
+	// 		Results Articles
+	// 	}{true, res})
+	// })
+	http.ListenAndServe(":80", handler)
 
 	// GetTemplate()
 
