@@ -32,6 +32,7 @@ func main() {
 		NewArticleIndex(articles, "")
 	}
 
+	// TODO: #14 @cdpierse Add S3 upload and retrieval functionality flags
 	index, err := GetIndex("example1.bleve")
 	if err != nil {
 		log.Print(err)
