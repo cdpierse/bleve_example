@@ -25,4 +25,10 @@ func TestDownload(t *testing.T) {
 			t.Fatalf("File '%s' does not exist in index", file)
 		}
 	}
+
+	_, err = GetIndex(s3TestIndex)
+	if err != nil {
+		t.Fatal("Could not fetch and load index")
+	}
+
 }
