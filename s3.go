@@ -3,10 +3,13 @@ package main
 import (
 	"log"
 	_ "log"
+	"os"
+	"path/filepath"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/blevesearch/bleve"
 )
 
@@ -34,10 +37,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	log.Println(CheckBucketExists(sess,"hacker-news-data-cdp"))
+	log.Println(CheckBucketExists(sess, "hacker-news-data-cdp"))
+	FileUploader(sess, "example1.bleve/index_meta.json")
 
 }
 
+// NewSession creates a new seission service client.
 func NewSession() (*session.Session, error) {
 	sess, err := session.NewSession(&aws.Config{
 		Region: aws.String(S3REGION)},
@@ -49,6 +54,13 @@ func NewSession() (*session.Session, error) {
 
 }
 
+// CheckBucketExists checks if a bucket exists for given aws account
+//	Inputs:
+//     sess: is the current session, which provides configuration for the SDK's service clients
+//     name: is the name of the bucket
+//	Output:
+//     true if the bucket exists, false if not
+//     error will not be nil if something goes wrong
 func CheckBucketExists(sess *session.Session, name string) (bool, error) {
 	client := s3.New(sess)
 	result, err := client.ListBuckets(nil)
@@ -61,4 +73,23 @@ func CheckBucketExists(sess *session.Session, name string) (bool, error) {
 		}
 	}
 	return false, nil
+}
+
+// FileUploader uploads
+func FileUploader(sess *session.Session, fp string) error {
+
+	file, err := os.Open(fp)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	_, filename := filepath.Split(fp)
+
+	uploader := s3manager.NewUploader(sess)
+	_, err = uploader.Upload(&s3manager.UploadInput{
+		Bucket: aws.String(S3BUCKET),
+		Key:    aws.String(filename),
+		Body:   file,
+	})
+	return nil
 }
