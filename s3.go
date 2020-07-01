@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"log"
 	_ "log"
 	"os"
@@ -37,8 +38,17 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	log.Println(CheckBucketExists(sess, "hacker-news-data-cdp"))
-	FileUploader(sess, "example1.bleve/index_meta.json")
+
+	if ok, err := CheckBucketExists(sess, S3BUCKET); !ok {
+		panic(err)
+	}
+
+	// UploadIndex("example1.bleve")
+	resp, err := CheckBucketObjectExists(sess, "index_mta.json", S3BUCKET)
+	if err != nil {
+		log.Panic(err)
+	}
+	log.Println(resp)
 
 }
 
@@ -72,11 +82,28 @@ func CheckBucketExists(sess *session.Session, name string) (bool, error) {
 			return true, nil
 		}
 	}
+	return false, errors.New("s3 bucket '" + name + " ' does not exist.")
+}
+
+func CheckBucketObjectExists(sess *session.Session, filename string, bucket string) (bool, error) {
+	client := s3.New(sess)
+	response, err := client.ListObjectsV2(&s3.ListObjectsV2Input{
+		Bucket: aws.String(bucket),
+	})
+	if err != nil {
+		return false, err
+	}
+	for _, obj := range response.Contents {
+		if filename == *obj.Key {
+			return true, nil
+		}
+	}
+
 	return false, nil
 }
 
-// FileUploader uploads
-func FileUploader(sess *session.Session, fp string) error {
+// FileUpload uploads a single file found at fp to an s3 bucket
+func FileUpload(sess *session.Session, fp string) error {
 
 	file, err := os.Open(fp)
 	if err != nil {
@@ -91,5 +118,31 @@ func FileUploader(sess *session.Session, fp string) error {
 		Key:    aws.String(filename),
 		Body:   file,
 	})
+
 	return nil
+}
+
+// UploadIndex finds all files in a given directory and individually adds each
+// to the bleve index bucket.
+func UploadIndex(root string) error {
+	var files []string
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		if !info.IsDir() {
+			files = append(files, path)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	sess, err := NewSession()
+	if err != nil {
+		panic(err)
+	}
+	for _, file := range files {
+		log.Printf("Uploading: %v", file)
+		_ = FileUpload(sess, file)
+	}
+	return nil
+
 }
