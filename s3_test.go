@@ -2,7 +2,7 @@ package main
 
 import (
 	_ "log"
-	_"os"
+	_ "os"
 	"testing"
 )
 
@@ -36,8 +36,18 @@ const s3TestIndex = "s3Test.bleve"
 // 	}
 // }
 
-
 func TestUpload(t *testing.T) {
+	filename := "test.txt"
+	sess, err := NewSession()
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = FileUpload(sess, filename)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-
+	if ok, err := ObjectExists(sess, filename, S3BUCKET); !ok {
+		t.Fatal(err)
+	}
 }
