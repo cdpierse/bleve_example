@@ -1,3 +1,5 @@
+# TODO: #13 @cdpierse reduce dockerfile size
+#13 https://medium.com/@chemidy/create-the-smallest-and-secured-golang-docker-image-based-on-scratch-4752223b7324
 FROM golang:alpine
 
 ENV GO111MODULE=on \
