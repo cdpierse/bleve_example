@@ -31,9 +31,7 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatal("Could not create testing index")
 	}
-	log.Println("Do stuff BEFORE the tests!")
 	exitVal := m.Run()
-	log.Println("Do stuff AFTER the tests!")
 	teardown()
 	os.Exit(exitVal)
 

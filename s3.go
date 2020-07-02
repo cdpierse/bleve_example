@@ -2,14 +2,14 @@ package main
 
 import (
 	"errors"
-	"log"
-	_ "log"
-	"os"
-	"path/filepath"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"log"
+	_ "log"
+	"os"
+	"path/filepath"
 )
 
 // Change these depending on your bucket, and region
@@ -18,28 +18,7 @@ const (
 	S3BUCKET = "bleve-search-example"
 )
 
-// func main() {
-// 	sess, err := session.NewSession(&aws.Config{
-// 		Region: aws.String(S3REGION)},
-// 	)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-
-// 	if ok, err := BucketExists(sess, S3BUCKET); !ok {
-// 		panic(err)
-// 	}
-
-// 	// UploadIndex("example1.bleve")
-// 	resp, err := ObjectExists(sess, "index_mta.json", S3BUCKET)
-// 	if err != nil {
-// 		log.Panic(err)
-// 	}
-// 	log.Println(resp)
-
-// }
-
-// NewSession creates a new seission service client.
+// NewSession creates a new session service client.
 func NewSession() (*session.Session, error) {
 	sess, err := session.NewSession(&aws.Config{
 		Region: aws.String(S3REGION)},
@@ -140,6 +119,15 @@ func UploadIndex(sess *session.Session, root string) error {
 		log.Printf("Uploading: %v", file)
 		_ = FileUpload(sess, file)
 	}
+	return nil
+
+}
+
+func DownloadFile() {
+
+}
+
+func DownloadIndex() error {
 	return nil
 
 }
