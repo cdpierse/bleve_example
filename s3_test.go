@@ -9,13 +9,21 @@ import (
 
 const s3TestIndex = "s3Test.bleve"
 
+func s3Setup() {
+
+}
+
+func s3Teardown() {
+
+}
+
 func TestUpload(t *testing.T) {
 	path := "data/test.txt"
 	sess, err := NewSession()
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = FileUpload(sess, path)
+	err = UploadFile(sess, path)
 	if err != nil {
 		t.Fatal(err)
 	}

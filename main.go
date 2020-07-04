@@ -8,6 +8,7 @@ import (
 	"os"
 )
 
+
 func main() {
 	log.Println("Hello World")
 	dataset := flag.String(
@@ -32,7 +33,6 @@ func main() {
 		NewArticleIndex(articles, "")
 	}
 
-	// TODO: #14 @cdpierse Add S3 upload and retrieval functionality flags
 	index, err := GetIndex("example1.bleve")
 	if err != nil {
 		log.Print(err)

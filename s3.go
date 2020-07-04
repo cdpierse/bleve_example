@@ -2,14 +2,16 @@ package main
 
 import (
 	"errors"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"log"
 	_ "log"
 	"os"
 	"path/filepath"
+	"strings"
+
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 
 // Change these depending on your bucket, and region
@@ -77,7 +79,7 @@ func ObjectExists(sess *session.Session, filename string, bucket string) (bool, 
 }
 
 // FileUpload uploads a single file found at fp to an s3 bucket
-func FileUpload(sess *session.Session, fp string) error {
+func UploadFile(sess *session.Session, fp string) error {
 
 	file, err := os.Open(fp)
 	if err != nil {
@@ -117,17 +119,40 @@ func UploadIndex(sess *session.Session, root string) error {
 	}
 	for _, file := range files {
 		log.Printf("Uploading: %v", file)
-		_ = FileUpload(sess, file)
+		_ = UploadFile(sess, file)
 	}
 	return nil
 
 }
 
-func DownloadFile() {
+// todo: #18 @cdpierse add functions to download index from s3
+
+func DownloadFile(sess *session.Session, filename string) error {
+	downloader := s3manager.NewDownloader(sess)
+	requestInput := s3.GetObjectInput{
+		Bucket: aws.String(S3BUCKET),
+		Key:    aws.String(filename),
+	}
+	buf := aws.NewWriteAtBuffer([]byte{})
+	_, err := downloader.Download(buf, &requestInput)
+	if err != nil {
+		return err
+	}
+
+	return nil
 
 }
 
-func DownloadIndex() error {
+func DownloadIndex(dirname string) error {
+	if !strings.HasSuffix(dirname, ".bleve") {
+		dirname = dirname + ".bleve"
+	}
 	return nil
+
+}
+
+func main() {
+	sess, _ := NewSession()
+	DownloadFile(sess, "test.txt")
 
 }
