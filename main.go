@@ -44,9 +44,9 @@ func main() {
 
 	// http.ListenAndServe(":3000", handler)
 
-	
+
 	_, _ = NewSession()
-	DownloadIndex("example1.bleve")
+	DownloadIndex("dirwithoutextention")
 	// DownloadFile(sess, "test.txt")
 
 }

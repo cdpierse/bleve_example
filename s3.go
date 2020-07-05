@@ -170,6 +170,7 @@ func DownloadIndex(dirname string) error {
 		log.Printf("Dirname '%s' already exists, exiting function.", dirname)
 		return nil
 	}
+	os.Mkdir(dirname, 0700)
 	return nil
 
 }
