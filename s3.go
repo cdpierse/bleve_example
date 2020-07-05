@@ -127,6 +127,13 @@ func UploadIndex(sess *session.Session, root string) error {
 
 // todo: #18 @cdpierse add functions to download index from s3
 
+// DownloadFile does stuff downloads a file given by filename from the
+// s3 instance given by sess and the S3BUCKET inside that instance.
+//	Inputs:
+//     sess: is the current session, which provides configuration for the SDK's service clients
+//     filename: is the name of the file to be downloaded.
+//	Output:
+//     error
 func DownloadFile(sess *session.Session, filename string) error {
 	file, err := os.Create(filename)
 	defer file.Close()
@@ -140,7 +147,6 @@ func DownloadFile(sess *session.Session, filename string) error {
 	}
 
 	buff := &aws.WriteAtBuffer{}
-	// buf := aws.NewWriteAtBuffer([]byte{})
 	_, err = downloader.Download(buff, &requestInput)
 	if err != nil {
 		return err
@@ -159,12 +165,11 @@ func DownloadIndex(dirname string) error {
 	if !strings.HasSuffix(dirname, ".bleve") {
 		dirname = dirname + ".bleve"
 	}
+	ok := dirExists(dirname)
+	if ok {
+		log.Printf("Dirname '%s' already exists, exiting function.", dirname)
+		return nil
+	}
 	return nil
-
-}
-
-func main() {
-	sess, _ := NewSession()
-	DownloadFile(sess, "test.txt")
 
 }

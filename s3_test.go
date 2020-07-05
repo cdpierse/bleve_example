@@ -42,7 +42,7 @@ func TestDownload(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if !dirExists(dirName) {
+	if !DirExists(dirName) {
 		t.Fatalf("Directory %s does not exists ", dirName)
 	}
 	indexFiles := []string{"index_meta.json", "store"}
