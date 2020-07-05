@@ -128,16 +128,28 @@ func UploadIndex(sess *session.Session, root string) error {
 // todo: #18 @cdpierse add functions to download index from s3
 
 func DownloadFile(sess *session.Session, filename string) error {
+	file, err := os.Create(filename)
+	defer file.Close()
+	if err != nil {
+		return err
+	}
 	downloader := s3manager.NewDownloader(sess)
 	requestInput := s3.GetObjectInput{
 		Bucket: aws.String(S3BUCKET),
 		Key:    aws.String(filename),
 	}
-	buf := aws.NewWriteAtBuffer([]byte{})
-	_, err := downloader.Download(buf, &requestInput)
+
+	buff := &aws.WriteAtBuffer{}
+	// buf := aws.NewWriteAtBuffer([]byte{})
+	_, err = downloader.Download(buff, &requestInput)
 	if err != nil {
 		return err
 	}
+	numBytes, err := file.Write(buff.Bytes())
+	if err != nil {
+		return err
+	}
+	log.Println(numBytes)
 
 	return nil
 
